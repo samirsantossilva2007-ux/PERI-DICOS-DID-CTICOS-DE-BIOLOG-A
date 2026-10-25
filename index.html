@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <script>
 (function () {
-  // Celulares e tablets: manter a pagina original.
-  var ua = (navigator.userAgent || "").toLowerCase();
-  var mobile = /android|iphone|ipod|iemobile|opera mini|blackberry|ipad/.test(ua)
-    || (ua.includes("macintosh") && navigator.maxTouchPoints > 1);
+  "use strict";
+  const DESKTOP_REDIRECT_URL = "https://paginas-vivas-da-biologia.lovable.app";
 
-  if (!mobile) {
-    // Impedir qualquer conteudo visivel caso a navegacao seja bloqueada.
-    document.documentElement.style.background = "#fff";
-    var style = document.createElement("style");
-    style.textContent = "html,body{background:#fff!important}body{display:none!important}";
-    document.head.appendChild(style);
-    // about:blank permite um unico arquivo, sem depender de outra pagina.
-    window.location.replace("about:blank");
+  function isMobile() {
+    const ua = (navigator.userAgent || "").toLowerCase();
+    const uaMobile = /android|iphone|ipod|iemobile|opera mini|blackberry/.test(ua);
+    const isIPad = ua.includes("ipad") ||
+      (ua.includes("macintosh") && navigator.maxTouchPoints > 1);
+    return uaMobile || isIPad;
+  }
+
+  try {
+    if (!isMobile()) {
+      const suffix = (window.location.search || "") + (window.location.hash || "");
+      window.location.replace(DESKTOP_REDIRECT_URL + suffix);
+    }
+  } catch (error) {
+    console.error("Erro no redirecionamento:", error);
   }
 })();
 </script>
@@ -271,6 +276,8 @@ footer .wrap{padding-block:30px;display:grid;gap:6px}
   html{scroll-behavior:auto}
 }
 </style>
+</head>
+<body>
 
 <div class="topbar" role="note">
   <div class="wrap">
@@ -630,3 +637,6 @@ const upd=()=>{const on=heroOut&&!plansIn;sticky.classList.toggle("on",on);stick
 new IntersectionObserver(e=>{heroOut=!e[0].isIntersecting;upd();}).observe(hero);
 new IntersectionObserver(e=>{plansIn=e[0].isIntersecting;upd();},{threshold:.15}).observe(plans);
 </script>
+
+</body>
+</html>
